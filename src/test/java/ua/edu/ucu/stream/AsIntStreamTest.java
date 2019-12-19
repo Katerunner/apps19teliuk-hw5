@@ -44,10 +44,11 @@ public class AsIntStreamTest {
     public void testMax() {
         int actual1 = intStream1.max();
         int actual2 = intStream3.max();
+        int actual3 = AsIntStream.of(1, 2, 0, 2).max();
 
         assertEquals(100, actual1);
         assertEquals(13, actual2);
-
+        assertEquals(2, actual3);
     }
 
     @Test
