@@ -128,7 +128,7 @@ public class AsIntStream implements IntStream {
             public Integer next() {
                 nOfSuc++;
                 if (value == null) {
-                    throw new NoSuchElementException()
+                    throw new NoSuchElementException();
                 }
                 return (int) value;
             }
