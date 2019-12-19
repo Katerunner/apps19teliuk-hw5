@@ -5,7 +5,6 @@ import ua.edu.ucu.function.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class AsIntStream implements IntStream {
     private Iterator<Integer> array;
@@ -20,6 +19,10 @@ public class AsIntStream implements IntStream {
     private void setIterator(Iterator<Integer> inpArr, int inpSize) {
         this.array = inpArr;
         this.size = inpSize;
+    }
+
+    private Iterator<Integer> getIterator() {
+        return array;
     }
 
     private void checkSize() throws IllegalArgumentException {
@@ -102,67 +105,36 @@ public class AsIntStream implements IntStream {
     @Override
     public IntStream filter(IntPredicate predicate) {
         class FilterIterator implements Iterator<Integer> {
-            private int ind = 0;
-            private Integer preNext = null;
-            private boolean proceed = false;
+            private int value;
+            private int nOfSuc;
 
             @Override
             public boolean hasNext() {
-                boolean mainCond = ind < size;
-                if (!mainCond) {
-                    return false;
-                }
-                if (proceed) {
-                    preNext = preGet();
-                    if (preNext == null) {
-                        return false;
+                while (array.hasNext()) {
+                    value = array.next();
+                    if (predicate.test(value)) {
+                        return true;
                     }
-
                 }
-                return true;
+                if (nOfSuc == 0) {
+                    throw new IllegalArgumentException();
+                }
+                return false;
             }
 
-            private Integer preGet() {
-                try {
-                    return array.next();
-                } catch (NoSuchElementException exp) {
-                    return null;
-                }
-            }
 
             @Override
             public Integer next() {
-//                System.out.print(ind);
-//                System.out.print(" Filter\n");
-                proceed = true;
-                if (hasNext()) {
-                    ind++;
-                    int value = preNext;
-                    if (predicate.test(value)) {
-                        proceed = false;
-                        return value;
-                    } else {
-                        proceed = false;
-                        return next();
-                    }
-                }
-                proceed = false;
-                throw new IllegalArgumentException();
+                nOfSuc++;
+                return value;
             }
         }
 
         AsIntStream toRes = new AsIntStream();
-        toRes.setIterator(new FilterIterator(), size);
+        toRes.setIterator(new
+
+                FilterIterator(), size);
         return toRes;
-
-//        AsIntStream toRes = new AsIntStream();
-//        for (int value : array) {
-//            if (predicate.test(value)) {
-//                toRes.array.add(value);
-//            }
-//        }
-//        return toRes;
-
     }
 
     @Override
@@ -186,49 +158,43 @@ public class AsIntStream implements IntStream {
 
             @Override
             public Integer next() {
-                int value = array.next();
-//                System.out.println(value);
-                return mapper.apply(value);
+                return mapper.apply(array.next());
             }
         }
 
         AsIntStream toRes = new AsIntStream();
         toRes.setIterator(new MapperIterator(), size);
         return toRes;
-
-
-//        AsIntStream toRes = new AsIntStream();
-//        array.forEach(
-//                x -> {
-//                    toRes.array.add(mapper.apply(x));
-//                });
-//        return toRes;
-
     }
 
     @Override
     public IntStream flatMap(IntToIntStreamFunction func) {
 
-        ArrayList<Integer> cache = new ArrayList<>();
-        ArrayList<Integer> curStream = new ArrayList<>();
-        while (array.hasNext()) {
-            curStream.add(array.next());
-        }
-        curStream.forEach(
-                x -> {
-                    AsIntStream asIntStream = (AsIntStream)
-                            func.applyAsIntStream(x);
-                    IntConsumer action = cache::add;
-                    asIntStream.forEach(action);
-                });
-        int[] intArray = new int[cache.size()];
-        int value = 0;
-        while (value < cache.size()) {
-            intArray[value] = cache.get(value);
-            value++;
-        }
-        return AsIntStream.of(intArray);
+        class FlatMapIterator implements Iterator<Integer> {
+            private Iterator<Integer> toRet;
 
+            public boolean hasNext() {
+                if (toRet != null && toRet.hasNext()) {
+                    return true;
+                }
+                if (array.hasNext()) {
+                    toRet = ((AsIntStream)
+                            func.applyAsIntStream(
+                                    array.next()))
+                            .getIterator();
+                    return true;
+                }
+                return false;
+            }
+
+            public Integer next() {
+                return toRet.next();
+            }
+        }
+
+        AsIntStream toRes = new AsIntStream();
+        toRes.setIterator(new FlatMapIterator(), size);
+        return toRes;
     }
 
     @Override

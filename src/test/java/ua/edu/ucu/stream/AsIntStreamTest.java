@@ -119,8 +119,21 @@ public class AsIntStreamTest {
     public void testReduce() {
         int actual1 = intStream1.reduce(0, (sum, x) -> sum += x);
         int actual2 = intStream3.reduce(0, (sum, x) -> sum -= x);
+        int actual3 = AsIntStream.of(1, 2, 0, 2)
+                .filter(x -> x > 1)
+                .map(x -> x * x)
+                .flatMap(x -> AsIntStream.of(x - 1, x, x + 1))
+                .reduce(0, (sum, x) -> sum += x);
+        int actual4 = AsIntStream.of(1, 2, 0, 2)
+                .map(x -> x * x)
+                .filter(x -> x > 1)
+                .filter(x -> x > 1)
+                .map(x -> x * 2)
+                .reduce(0, (sum, x) -> sum += x);
         assertEquals(103, actual1);
         assertEquals(-34, actual2);
+        assertEquals(24, actual3);
+        assertEquals(16, actual4);
     }
 
     @Test

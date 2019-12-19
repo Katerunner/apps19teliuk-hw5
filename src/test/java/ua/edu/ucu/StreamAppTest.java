@@ -24,6 +24,7 @@ public class StreamAppTest {
     @Test
     public void testStreamOperations() {
         System.out.println("streamOperations");
+        StreamApp instance = new StreamApp();
         int expResult = 42;
         int result = StreamApp.streamOperations(intStream);
         assertEquals(expResult, result);
