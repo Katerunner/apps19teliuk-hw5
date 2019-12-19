@@ -31,7 +31,7 @@ public class AsIntStreamTest {
     @Test
     public void testAverage() {
         Double actual = intStream1.average();
-        assertEquals(14.0, (double) actual, 0.0001);
+        assertEquals(14.71428, (double) actual, 0.0001);
     }
 
     @Test(expected = IllegalArgumentException.class)
