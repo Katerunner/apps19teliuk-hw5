@@ -130,7 +130,7 @@ public class AsIntStream implements IntStream {
                 if (value == null) {
                     throw new NoSuchElementException();
                 }
-                return value.intValue();
+                return value;
             }
         }
 
