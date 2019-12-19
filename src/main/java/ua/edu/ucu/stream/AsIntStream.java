@@ -5,6 +5,7 @@ import ua.edu.ucu.function.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class AsIntStream implements IntStream {
     private Iterator<Integer> array;
@@ -105,7 +106,7 @@ public class AsIntStream implements IntStream {
     @Override
     public IntStream filter(IntPredicate predicate) {
         class FilterIterator implements Iterator<Integer> {
-            private int value;
+            private Integer value;
             private int nOfSuc;
 
             @Override
@@ -126,7 +127,10 @@ public class AsIntStream implements IntStream {
             @Override
             public Integer next() {
                 nOfSuc++;
-                return value;
+                if (value == null) {
+                    throw new NoSuchElementException()
+                }
+                return (int) value;
             }
         }
 
@@ -171,7 +175,7 @@ public class AsIntStream implements IntStream {
     public IntStream flatMap(IntToIntStreamFunction func) {
 
         class FlatMapIterator implements Iterator<Integer> {
-            private Iterator<Integer> toRet;
+            private Iterator<Integer> toRet = null;
 
             public boolean hasNext() {
                 if (toRet != null && toRet.hasNext()) {
