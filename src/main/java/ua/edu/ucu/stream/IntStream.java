@@ -1,5 +1,6 @@
 package ua.edu.ucu.stream;
 
+
 import ua.edu.ucu.function.*;
 
 public interface IntStream {
@@ -9,7 +10,7 @@ public interface IntStream {
     Integer max();
 
     Integer min();
-    
+
     IntStream flatMap(IntToIntStreamFunction func);
 
     long count();

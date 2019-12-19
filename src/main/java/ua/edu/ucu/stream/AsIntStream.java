@@ -17,9 +17,9 @@ public class AsIntStream implements IntStream {
         size = 0;
     }
 
-    private void setIterator(Iterator<Integer> array, int size) {
-        this.array = array;
-        this.size = size;
+    private void setIterator(Iterator<Integer> inpArr, int inpSize) {
+        this.array = inpArr;
+        this.size = inpSize;
     }
 
     private void checkSize() throws IllegalArgumentException {
@@ -48,7 +48,7 @@ public class AsIntStream implements IntStream {
             sumA = sumA + value;
             count++;
         }
-        return (double) (sumA / count);
+        return (double) sumA / (double) count;
     }
 
     @Override
@@ -103,8 +103,7 @@ public class AsIntStream implements IntStream {
     public IntStream filter(IntPredicate predicate) {
         class FilterIterator implements Iterator<Integer> {
             private int ind = 0;
-            private int nOfSuc = 0;
-            private Integer preNext;
+            private Integer preNext = null;
             private boolean proceed = false;
 
             @Override
@@ -141,7 +140,6 @@ public class AsIntStream implements IntStream {
                     int value = preNext;
                     if (predicate.test(value)) {
                         proceed = false;
-                        nOfSuc++;
                         return value;
                     } else {
                         proceed = false;
@@ -218,7 +216,8 @@ public class AsIntStream implements IntStream {
         }
         curStream.forEach(
                 x -> {
-                    AsIntStream asIntStream = (AsIntStream) func.applyAsIntStream(x);
+                    AsIntStream asIntStream = (AsIntStream)
+                            func.applyAsIntStream(x);
                     IntConsumer action = cache::add;
                     asIntStream.forEach(action);
                 });
