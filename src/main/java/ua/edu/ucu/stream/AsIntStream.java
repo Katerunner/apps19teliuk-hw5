@@ -47,7 +47,8 @@ public class AsIntStream implements IntStream {
         checkSize();
         int sumA = 0;
         int count = 0;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             int value = it.next();
             sumA = sumA + value;
             count++;
@@ -59,7 +60,8 @@ public class AsIntStream implements IntStream {
     public Integer max() {
         checkSize();
         int maxi = Integer.MIN_VALUE;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             int value = it.next();
             if (value > maxi) {
                 maxi = value;
@@ -72,7 +74,8 @@ public class AsIntStream implements IntStream {
     public Integer min() {
         checkSize();
         int mini = Integer.MAX_VALUE;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             int value = it.next();
             if (value < mini) {
                 mini = value;
@@ -85,7 +88,8 @@ public class AsIntStream implements IntStream {
     public long count() {
         checkSize();
         int count = 0;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             it.next();
             count++;
         }
@@ -96,7 +100,9 @@ public class AsIntStream implements IntStream {
     public Integer sum() {
         checkSize();
         int sumS = 0;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it;
+        it = array;
+        while (it.hasNext()) {
             int value = it.next();
             sumS = sumS + value;
         }
@@ -143,7 +149,8 @@ public class AsIntStream implements IntStream {
 
     @Override
     public void forEach(IntConsumer action) {
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             Integer value;
             value = it.next();
             action.accept(value);
@@ -204,7 +211,8 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         int toRes = identity;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             int element = it.next();
             toRes = op.apply(toRes, element);
         }
@@ -215,7 +223,8 @@ public class AsIntStream implements IntStream {
     public int[] toArray() {
         int[] toRes = new int[size];
         int i = 0;
-        for (Iterator<Integer> it = array; it.hasNext(); ) {
+        Iterator<Integer> it = array;
+        while (it.hasNext()) {
             int value = it.next();
             toRes[i] = value;
             i++;

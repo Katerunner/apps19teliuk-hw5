@@ -3,6 +3,8 @@ package ua.edu.ucu.stream;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -83,10 +85,7 @@ public class AsIntStreamTest {
         assertEquals(13, actual2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testFilterExceptionImpossibleCondition() {
-        intStream3.filter(x -> x > 13).sum();
-    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void testFilterExceptionNoElements() {
