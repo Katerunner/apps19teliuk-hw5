@@ -113,7 +113,6 @@ public class AsIntStream implements IntStream {
     public IntStream filter(IntPredicate predicate) {
         class FilterIterator implements Iterator<Integer> {
             private Integer value;
-            private int nOfSuc;
 
             @Override
             public boolean hasNext() {
@@ -123,16 +122,12 @@ public class AsIntStream implements IntStream {
                         return true;
                     }
                 }
-                if (nOfSuc == 0) {
-                    throw new IllegalArgumentException();
-                }
                 return false;
             }
 
 
             @Override
             public Integer next() {
-                nOfSuc++;
                 if (value == null) {
                     throw new NoSuchElementException();
                 }
